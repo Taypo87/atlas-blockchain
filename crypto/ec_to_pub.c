@@ -11,6 +11,8 @@ uint8_t *ec_to_pub(EC_KEY const *key, uint8_t pub[EC_PUB_LEN])
 	EC_GROUP const *group;
 	BN_CTX *ctx;
 
+	if (!key)
+		return (NULL);
 	ctx = BN_CTX_new();
 	public_point = EC_KEY_get0_public_key(key);
 	group = EC_KEY_get0_group(key);

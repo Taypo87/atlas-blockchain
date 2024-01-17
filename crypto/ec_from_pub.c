@@ -11,6 +11,8 @@ EC_KEY *ec_from_pub(uint8_t const pub[EC_PUB_LEN])
 	EC_GROUP const *group;
 	BN_CTX *ctx;
 
+	if (!pub)
+		return (NULL);
 	key = EC_KEY_new();
 	ctx = BN_CTX_new();
 	group = EC_GROUP_new_by_curve_name(EC_CURVE);

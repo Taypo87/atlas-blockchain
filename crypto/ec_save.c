@@ -41,8 +41,13 @@ static int handle_path(char *folder)
     struct stat st = {0};
 
     if (stat((char *)folder, &st) == -1)
+    {
         if (mkdir((char *)folder, 0777) == -1)
+        {
+            perror("mkdir");
             return (0);
+        }
+    }
     return (1);
 }
 

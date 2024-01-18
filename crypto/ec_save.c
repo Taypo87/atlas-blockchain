@@ -77,7 +77,7 @@ int ec_save(EC_KEY *key, char const *folder)
 		return (0);
 	handle_path(folder);
 	if (!write_private(key, folder) || !write_public(key, folder))
-		return(0);
+		return (0);
 	return (1);
 
 }

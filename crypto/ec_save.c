@@ -12,6 +12,7 @@ int write_private(EC_KEY *key, char const *folder)
     fp = fopen(priv_path, "w");
     if (!fp)
         printf("failed to open file\n");
+        printf("path is %s\n", priv_path);
     written = PEM_write_ECPrivateKey(fp, key, NULL, NULL, 0, NULL, NULL);
     fclose(fp);
     free(priv_path);

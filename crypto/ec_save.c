@@ -36,7 +36,7 @@ int write_public(EC_KEY *key, char const *folder)
     return (written > 0 ? 1 : 0);
 }
 
-static int handle_path(char *folder)
+static int handle_path(char const *folder)
 {
     struct stat st = {0};
 

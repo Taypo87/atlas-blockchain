@@ -9,10 +9,12 @@ int write_private(EC_KEY *key, char const *folder)
     char *file_name = "key.pem";
 
     snprintf(priv_path, path_len, "%s/%s", folder, file_name);
+    printf("path is %s\n", priv_path);
     fp = fopen(priv_path, "w");
     if (!fp)
         printf("failed to open file\n");
     written = PEM_write_ECPrivateKey(fp, key, NULL, NULL, 0, NULL, NULL);
+    printf("wrttien = %d\n", written);
     fclose(fp);
     free(priv_path);
     return (written > 0 ? 1 : 0);
@@ -27,10 +29,12 @@ int write_public(EC_KEY *key, char const *folder)
     int written = 0;
 
     snprintf(pub_path, path_len, "%s/%s", folder, file_name);
+    printf("public path is %s\n", pub_path);
     fp = fopen(pub_path, "w");
     if (!fp)
         printf("failed to open file\n");
     written = PEM_write_EC_PUBKEY(fp, key);
+    printf("wrttien = %d\n", written);
     fclose(fp);
     free(pub_path);
     return (written > 0 ? 1 : 0);

@@ -9,7 +9,6 @@ int write_private(EC_KEY *key, char const *folder)
     char *file_name = "key.pem";
 
     snprintf(priv_path, path_len, "%s/%s", folder, file_name);
-    printf("path is %s\n", priv_path);
     fp = fopen(priv_path, "w");
     if (!fp)
         printf("failed to open file\n");
@@ -28,7 +27,6 @@ int write_public(EC_KEY *key, char const *folder)
     int written = 0;
 
     snprintf(pub_path, path_len, "%s/%s", folder, file_name);
-    printf("public path is %s\n", pub_path);
     fp = fopen(pub_path, "w");
     if (!fp)
         printf("failed to open file\n");

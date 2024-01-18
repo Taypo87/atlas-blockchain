@@ -1,6 +1,6 @@
 #include "hblk_crypto.h"
 
-int write_private(EC_KEY *key, char const *folder)
+static int write_private(EC_KEY *key, char const *folder)
 {
     FILE *fp;
     int written = 0;
@@ -18,7 +18,7 @@ int write_private(EC_KEY *key, char const *folder)
     return (written > 0 ? 1 : 0);
 }
 
-int write_public(EC_KEY *key, char const *folder)
+static int write_public(EC_KEY *key, char const *folder)
 {
     FILE *fp;
     size_t path_len = strlen(folder) + strlen("/key_pub.pem") + 3;

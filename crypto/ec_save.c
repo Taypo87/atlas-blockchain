@@ -53,19 +53,11 @@ static int handle_path(char *folder)
 
 int ec_save(EC_KEY *key, char const *folder)
 {
-    char *path, **selector, *folder_temp = (char *)folder;
 
     if (!key)
         return (0);
-    selector = &folder_temp;
-    path = malloc(sizeof(char *) * (strlen(folder) + 2));
-    if (folder[0] != '/' && folder[0] != '.')
-    {
-        snprintf(path, (strlen(folder) + 2), "/%s", folder);
-        selector = &path;
-    }
-    handle_path(*selector);
-    if (!write_private(key, *selector) || !write_public(key, *selector))
+    handle_path(folder);
+    if (!write_private(key, folder) || !write_public(key, folder))
         return(0);
     return (1);
 

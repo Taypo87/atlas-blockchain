@@ -2,7 +2,7 @@
 //reading the private key should also load the public key
 
 
-static int read_private()
+static int read_private(char *fullpath)
 {
 
 }
@@ -10,7 +10,7 @@ static int read_private()
 
 EC_KEY *ec_load(char const *folder)
 {
-
+    
 }
 
 

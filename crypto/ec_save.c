@@ -3,7 +3,7 @@
 int write_private(EC_KEY *key, char const *folder)
 {
     FILE *fp;
-    int written;
+    int written = 0;
     size_t path_len = strlen(folder) + strlen("/key.pem") + 3;
     char *priv_path = malloc(sizeof(char) * (path_len));
     char *file_name = "key.pem";

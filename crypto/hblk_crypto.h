@@ -9,6 +9,9 @@
 #include <string.h>
 #include <openssl/objects.h>
 #include <openssl/pem.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 
 # define EC_CURVE   NID_secp256k1

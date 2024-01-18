@@ -23,7 +23,7 @@ static int write_public(EC_KEY *key, char const *folder)
     FILE *fp;
     size_t path_len = strlen(folder) + strlen("/key_pub.pem") + 3;
     char *pub_path = malloc(sizeof(char) * (path_len));
-    char *file_name = "pub_key.pem";
+    char *file_name = "key_pub.pem";
     int written = 0;
 
     snprintf(pub_path, path_len, "%s/%s", folder, file_name);

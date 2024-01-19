@@ -14,8 +14,9 @@ EC_KEY *ec_load(char const *folder)
 
     key = EC_KEY_new();
     snprintf(fullpath, size, "%s/%s", folder, fname);
-    fp = fopen(fullpath, "w");
-    key = PEM_read_ECPrivateKey(fp, &key, NULL, NULL);
+    fp = fopen(fullpath, "r");
+    if (!PEM_read_ECPrivateKey(fp, &key, NULL, NULL))
+        puts("private key read error");
     fclose(fp);
     return (key);
 }

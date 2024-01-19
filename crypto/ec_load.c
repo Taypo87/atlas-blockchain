@@ -12,9 +12,10 @@ EC_KEY *ec_load(char const *folder)
     char *fname = "key.pem";
     char *fullpath = malloc(sizeof(char) * size);
 
+    key = EC_KEY_new();
     snprintf(fullpath, size, "%s/%s", folder, fname);
     fp = fopen(fullpath, "w");
-    key = PEM_read_ECPrivateKey(fp, NULL, NULL, NULL);
+    key = PEM_read_ECPrivateKey(fp, &key, NULL, NULL);
     fclose(fp);
     return (key);
 }

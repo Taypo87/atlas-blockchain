@@ -1,18 +1,20 @@
 #include "hblk_crypto.h"
-//reading the private key should also load the public key
-
-
-static int read_private(char *fullpath)
-{
-
-}
-
-
+/**
+ * ec_load - loads an ec key pair from disk
+ * @folder: the folder containing the ec key pair
+ * Return: EC_KEY struct containing the ec key pair
+*/
 EC_KEY *ec_load(char const *folder)
 {
-    
+    FILE *fp;
+    EC_KEY *key;
+    size_t size = (strlen(folder) + 9);
+    char *fname = "key.pem";
+    char *fullpath = malloc(sizeof(char) * size);
+
+    snprintf(fullpath, size, "%s/%s", folder, fname);
+    fp = fopen(fullpath, "w");
+    key = PEM_read_ECPrivateKey(fp, NULL, NULL, NULL);
+    fclose(fp);
+    return (key);
 }
-
-
-EC_KEY *PEM_read_EC_PUBKEY(FILE *fp, EC_KEY **x, pem_password_cb *cb, void *u);
-EC_KEY *PEM_read_ECPrivateKey(FILE *out, EC_KEY **x, pem_password_cb *cb, void *u);

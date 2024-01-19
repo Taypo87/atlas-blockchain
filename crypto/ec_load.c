@@ -6,17 +6,17 @@
 */
 EC_KEY *ec_load(char const *folder)
 {
-    FILE *fp;
-    EC_KEY *key;
-    size_t size = (strlen(folder) + 9);
-    char *fname = "key.pem";
-    char *fullpath = malloc(sizeof(char) * size);
+	FILE *fp;
+	EC_KEY *key;
+	size_t size = (strlen(folder) + 9);
+	char *fname = "key.pem";
+	char *fullpath = malloc(sizeof(char) * size);
 
-    key = EC_KEY_new();
-    snprintf(fullpath, size, "%s/%s", folder, fname);
-    fp = fopen(fullpath, "r");
-    if (!PEM_read_ECPrivateKey(fp, &key, NULL, NULL))
-        puts("private key read error");
-    fclose(fp);
-    return (key);
+	key = EC_KEY_new();
+	snprintf(fullpath, size, "%s/%s", folder, fname);
+	fp = fopen(fullpath, "r");
+	if (!PEM_read_ECPrivateKey(fp, &key, NULL, NULL))
+		puts("private key read error");
+	fclose(fp);
+	return (key);
 }

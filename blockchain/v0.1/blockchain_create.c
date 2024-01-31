@@ -11,7 +11,7 @@ blockchain_t *blockchain_create(void)
 
     memset(genesis_block->info.prev_hash, 0, BLOCKCHAIN_DATA_MAX); 
     
-    genesis_block->data.len = (uint32_t)(sizeof(data) - 1);
+    genesis_block->data.len = strlen((char)(data));
     memcpy(genesis_block->data.buffer, data, genesis_block->data.len);
 
     memcpy(genesis_block->hash, genesis_hash, BLOCKCHAIN_DATA_MAX);

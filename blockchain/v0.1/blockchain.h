@@ -14,7 +14,6 @@
 #include <unistd.h>
 #include "llist.h"
 
-
 /**
  * struct blockchain_s - Blockchain structure
  *
@@ -25,20 +24,6 @@ typedef struct blockchain_s
     llist_t     *chain;
 } blockchain_t;
 
-
-/**
- * struct block_s - Block structure
- *
- * @info: Block info
- * @data: Block data
- * @hash: 256-bit digest of the Block, to ensure authenticity
- */
-typedef struct block_s
-{
-    block_info_t    info; /* This must stay first */
-    block_data_t    data; /* This must stay second */
-    uint8_t     hash[SHA256_DIGEST_LENGTH];
-} block_t;
 
 /**
  * struct block_info_s - Block info structure
@@ -83,7 +68,21 @@ typedef struct block_data_s
     uint32_t    len;
 } block_data_t;
 
-blockchain_t *blockchain_create(void);
 
+/**
+ * struct block_s - Block structure
+ *
+ * @info: Block info
+ * @data: Block data
+ * @hash: 256-bit digest of the Block, to ensure authenticity
+ */
+typedef struct block_s
+{
+    block_info_t    info; /* This must stay first */
+    block_data_t    data; /* This must stay second */
+    uint8_t     hash[SHA256_DIGEST_LENGTH];
+} block_t;
+
+blockchain_t *blockchain_create(void);
 
 #endif

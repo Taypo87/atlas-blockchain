@@ -12,7 +12,7 @@ block_t *block_create(block_t const *prev, int8_t const *data,
 {
 	block_t *new_block = calloc(1, sizeof(block_t));
 
-	memcpy(new_block->data.buffer, data, BLOCKCHAIN_DATA_MAX);
+	memcpy(new_block->data.buffer, data, data_len);
 	new_block->data.len = data_len;
 	new_block->info.index = prev->info.index + 1;
 	new_block->info.timestamp = time(NULL);

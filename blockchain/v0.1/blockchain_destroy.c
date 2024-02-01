@@ -6,5 +6,5 @@ void blockchain_destroy(blockchain_t *blockchain)
 	{
 		block_destroy(llist_pop((llist_t *)blockchain));
 	}
-	llist_destroy(blockchain, 0, NULL);
+	llist_destroy((llist_t *)blockchain, 0, NULL);
 }

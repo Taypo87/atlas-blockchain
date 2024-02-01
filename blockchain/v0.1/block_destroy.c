@@ -5,8 +5,5 @@
 */
 void block_destroy(block_t *block)
 {
-	free(block->data.buffer);
-	free(block->hash);
-	free(block->info.prev_hash);
 	free(block);
 }

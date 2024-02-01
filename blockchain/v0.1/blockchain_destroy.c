@@ -1,10 +1,10 @@
 #include "blockchain.h"
-/**
- * blockchain_destroy - frees all the blocks and the blochain itself
-*/
+
 void blockchain_destroy(blockchain_t *blockchain)
 {
-	void (*blk_dstry_ptr)(block_t *);
-	blk_dstry_ptr = block_destroy;
-	llist_destroy(blockchain, llist_size(blockchain), blk_dstry_ptr);
+	while (llist_size((llist_t *)blockchain) > 0)
+	{
+		block_destroy(llist_pop((llist_t *)blockchain));
+	}
+	llist_destroy(blockchain, 0, NULL);
 }

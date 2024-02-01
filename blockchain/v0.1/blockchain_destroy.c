@@ -2,9 +2,8 @@
 
 void blockchain_destroy(blockchain_t *blockchain)
 {
-	while (llist_size((llist_t *)blockchain) > 0)
-	{
-		block_destroy((block_t *)llist_pop((llist_t *)blockchain));
-	}
-	llist_destroy((llist_t *)blockchain, 0, NULL);
+	void (*blk_destroy_ptr)(block_t);
+
+	blk_destroy_ptr = block_destroy;
+	llist_destroy((llist_t *)blockchain, llist_size((llist_t *)blockchain), (node_dtor_t)blk_destroy_ptr);
 }

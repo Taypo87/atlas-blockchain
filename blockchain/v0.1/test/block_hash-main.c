@@ -22,13 +22,13 @@ int main(void)
 
     block = block_create(block, (int8_t *)"Holberton", 9);
     llist_add_node(blockchain->chain, block, ADD_NODE_REAR);
-    _blockchain_print(blockchain);
+    blockchain_print(blockchain);
 
     block_hash(block, block->hash);
     block = block_create(block, (int8_t *)"School", 6);
     llist_add_node(blockchain->chain, block, ADD_NODE_REAR);
-    _blockchain_print(blockchain);
+    blockchain_print(blockchain);
 
-    _blockchain_destroy(blockchain);
+    blockchain_destroy(blockchain);
     return (EXIT_SUCCESS);
 }

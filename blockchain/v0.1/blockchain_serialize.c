@@ -10,11 +10,10 @@
 */
 static int block_write(llist_node_t node, unsigned int idx, void *arg)
 {
-	llist_node_t *node_ptr;
 	block_t *block = (block_t *)node;
 	FILE *fp = (FILE *)arg;
 
-	fwrite((void *)block->info.index, 1, 4, fp);
+	fwrite((void *)idx, 1, 4, fp);
 	fwrite((void *)block->info.difficulty, 1, 4, fp);
 	fwrite((void *)block->info.timestamp, 1, 8, fp);
 	fwrite((void *)block->info.nonce, 1, 8, fp);
@@ -33,7 +32,7 @@ static int block_write(llist_node_t node, unsigned int idx, void *arg)
 int blockchain_serialize(blockchain_t const *blockchain, char const *path)
 {
 	FILE *fp;
-	node_func_t *action;
+	node_func_t action;
 	void *write_pointer;
 	unsigned char magic_num[4] = {'H', 'B', 'L', 'K'}, hblk_ver[3] = {'0', '.', '1'}, endian;
 

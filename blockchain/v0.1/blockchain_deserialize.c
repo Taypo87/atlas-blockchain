@@ -34,7 +34,8 @@ blockchain_t *blockchain_deserialize(char const *path)
     FILE *fp;
     blockchain_t *blockchain = calloc(1, sizeof(blockchain_t));
     block_t block;
-    unsigned char four_[4], eight_[8], thirtytwo_[32];
+    uint8_t num_blocks;
+    unsigned char four_[4];
 
     fp = fopen(path, "rb");
     if (!fp)
@@ -48,8 +49,8 @@ blockchain_t *blockchain_deserialize(char const *path)
     fread(four_, 1, 1, fp);
     if (_get_endianness() != four_[0])
         puts("endianness does not match\n");
-    fread(four_, 1, 4, fp);
-    printf("%d\n", four_);
+    fread(num_blocks, 1, 4, fp);
+    printf("%d\n", num_blocks);
     return (blockchain);
 
     

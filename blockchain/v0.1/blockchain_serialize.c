@@ -13,12 +13,12 @@ static int block_write(llist_node_t node, unsigned int idx, void *arg)
 	block_t *block = (block_t *)node;
 	FILE *fp = (FILE *)arg;
 
-	fwrite((void *)idx, 1, 4, fp);
-	fwrite((void *)block->info.difficulty, 1, 4, fp);
-	fwrite((void *)block->info.timestamp, 1, 8, fp);
-	fwrite((void *)block->info.nonce, 1, 8, fp);
-	fwrite((void *)block->info.prev_hash, 1, 32, fp);
-	fwrite((void *)block->data.len, 1, 4, fp);
+	fwrite(&idx, 1, 4, fp);
+	fwrite(&block->info.difficulty, 1, 4, fp);
+	fwrite(&block->info.timestamp, 1, 8, fp);
+	fwrite(&block->info.nonce, 1, 8, fp);
+	fwrite(block->info.prev_hash, 1, 32, fp);
+	fwrite(&block->data.len, 1, 4, fp);
 	fwrite((void *)block->data.buffer, 1, block->data.len, fp);
 	fwrite((void *)block->hash, 1, 32, fp);
 	return (0);
@@ -33,7 +33,7 @@ int blockchain_serialize(blockchain_t const *blockchain, char const *path)
 {
 	FILE *fp;
 	node_func_t action;
-	void *write_pointer;
+	unsigned char num_blocks;
 	unsigned char magic_num[4] = {'H', 'B', 'L', 'K'}, hblk_ver[3] = {'0', '.', '1'}, endian;
 
 	endian = _get_endianness();
@@ -41,10 +41,11 @@ int blockchain_serialize(blockchain_t const *blockchain, char const *path)
 	fp = fopen(path, "wb");
 	if (!fp)
 		return (-1);
-	fwrite((void *)magic_num, 1, 4, fp);
-	fwrite((void *)hblk_ver, 1, 3, fp);
-	fwrite((void *)endian, 1, 1, fp);
-	fwrite((void *)llist_size(blockchain->chain), 1, 4, fp);
+	fwrite(magic_num, 1, 4, fp);
+	fwrite(hblk_ver, 1, 3, fp);
+	fwrite(&endian, 1, 1, fp);
+	num_blocks = llist_size(blockchain->chain);
+	fwrite(&num_blocks, 1, 4, fp);
 	if (llist_for_each(blockchain->chain, action, fp) < 0)
 		return (-1);
 	fclose(fp);

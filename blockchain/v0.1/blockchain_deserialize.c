@@ -56,14 +56,13 @@ blockchain_t *blockchain_deserialize(char const *path)
     block = calloc(num_blocks, sizeof(block_t));
     for (i = 0; i < num_blocks; i++)
     {
-        
-        fread(block_info.index, 1, 4, fp);
-        fread(block_info.difficulty, 1, 4, fp);
-        fread(block_info.timestamp, 1, 8, fp);
-        fread(block_info.nonce, 1, 8, fp);
-        fread(block_info.prev_hash, 1 ,32, fp);
-        fread(block_data.len, 1, 4, fp);
-        fread(block_data.buffer, 1, block_data.len, fp);
+        fread(&block_info.index, 1, 4, fp);
+        fread(&block_info.difficulty, 1, 4, fp);
+        fread(&block_info.timestamp, 1, 8, fp);
+        fread(&block_info.nonce, 1, 8, fp);
+        fread(&block_info.prev_hash, 1 ,32, fp);
+        fread(&block_data.len, 1, 4, fp);
+        fread(&block_data.buffer, 1, block_data.len, fp);
         fread(block[i]->hash, 1, 32, fp);
         block[i]->data = block_data;
         block[i]->info = block_info;

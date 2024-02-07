@@ -37,7 +37,7 @@ blockchain_t *blockchain_deserialize(char const *path)
     block_data_t block_data;
     blockchain_t *blockchain = calloc(1, sizeof(blockchain_t));
     uint8_t num_blocks = 0, i;
-    unsigned char four_[4], eight_[8], thirtytwo_[32];
+    unsigned char four_[4];
     
     blockchain->chain = llist_create(MT_SUPPORT_TRUE);
     fp = fopen(path, "rb");

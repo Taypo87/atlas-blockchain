@@ -1,46 +1,6 @@
 #include "blockchain.h"
 #include "provided/endianness.h"
-/**
- * initialize_header - initilizes the header_t variable
- * @blockchain: the blockchain to generate the header for
- * header_struct_ptr: address of the header struct pointer
- * Return: 0 on mem allocation failure, else 1;
-*/
-static int initialize_header(blockchain_t *blockchain, header_t **header_struct_ptr)
-{
-	header_t *header_struct;
 
-	header_struct = malloc(sizeof(header_t));
-	if(!header_struct);
-		return (0);
-	header_struct->hblk_magic = "HBLK";
-	header_struct->hblk_version = "1.0";
-	header_struct->hblk_endian = _get_endianness();
-	header_struct->hblk_blocks = llist_size(blockchain->chain);
-	*header_struct_ptr = header_struct;
-	return (1);
-}
-/**
- * initialize_blkmmbr - initializse the block_member_t variable
- * @block: a given block in the blockchain
- * @mmbrs_add: address of the mmbrs struct pointer
-*/
-static int initialize_blkmmbr(block_t *block, block_members_t **mmbrs_add)
-{
-	block_members_t *mmbrs;
-
-	mmbrs = malloc(sizeof(block_members_t));
-	if (!mmbrs)
-		return (0);
-	mmbrs->index = block->info.index;
-	mmbrs->diff = block->info.difficulty;
-	mmbrs->tstamp = block->info.timestamp;
-	mmbrs->non_c = block->info.nonce;
-	mmbrs->prv_hash = block->info.prev_hash;
-	mmbrs->dat_len = block->data.len;
-	*mmbrs_add = mmbrs;
-	return (1);
-}
 /**
  * block_write - saves a block in the chain to file
  * @node: the block
@@ -53,14 +13,15 @@ static int block_write(llist_node_t node, unsigned int idx, void *arg)
 	llist_node_t *node_ptr;
 	block_t *block = (block_t *)node;
 	FILE *fp = (FILE *)arg;
-	block_members_t *blk_mmbrs;
 
-	if (!initialize_blkmmbr(block, &blk_mmbrs))
-		return(-1);
-	fwrite(blk_mmbrs, sizeof(block_members_t), 1, fp);
+	fwrite((void *)block->info.index, 1, 4, fp);
+	fwrite((void *)block->info.difficulty, 1, 4, fp);
+	fwrite((void *)block->info.timestamp, 1, 8, fp);
+	fwrite((void *)block->info.nonce, 1, 8, fp);
+	fwrite((void *)block->info.prev_hash, 1, 32, fp);
+	fwrite((void *)block->data.len, 1, 4, fp);
 	fwrite((void *)block->data.buffer, 1, block->data.len, fp);
 	fwrite((void *)block->hash, 1, 32, fp);
-	free(blk_mmbrs);
 	return (0);
 }
 /**
@@ -72,17 +33,19 @@ static int block_write(llist_node_t node, unsigned int idx, void *arg)
 int blockchain_serialize(blockchain_t const *blockchain, char const *path)
 {
 	FILE *fp;
-	header_t *header_struct;
 	node_func_t *action;
 	void *write_pointer;
+	unsigned char magic_num[4] = {'H', 'B', 'L', 'K'}, hblk_ver[3] = {'0', '.', '1'}, endian;
 
-	
+	endian = _get_endianness();
 	action = block_write;
 	fp = fopen(path, "wb");
-	if (!initialize_header(blockchain, &header_struct) || !fp)
+	if (!fp)
 		return (-1);
-	fwrite((void *)header_struct, sizeof(header_t), 1, fp);
-	free(header_struct);
+	fwrite((void *)magic_num, 1, 4, fp);
+	fwrite((void *)hblk_ver, 1, 3, fp);
+	fwrite((void *)endian, 1, 1, fp);
+	fwrite((void *)llist_size(blockchain->chain), 1, 4, fp);
 	if (llist_for_each(blockchain->chain, action, fp) < 0)
 		return (-1);
 	fclose(fp);

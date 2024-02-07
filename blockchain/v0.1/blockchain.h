@@ -84,23 +84,6 @@ typedef struct block_s
 	uint8_t     hash[SHA256_DIGEST_LENGTH];
 } block_t;
 
-typedef struct header_s
-{
-	unsigned char hblk_magic : 4;
-	unsigned char hblk_version : 3;
-	unsigned char hblk_endian : 1;
-	unsigned char hblk_blocks : 4;
-} header_t;
-
-typedef struct block_members_s
-{
-	unsigned char index : 4;
-	unsigned char diff : 4;
-	unsigned char tstamp : 8;
-	unsigned char non_c : 8;
-	unsigned char prv_hash : 32
-}
-
 blockchain_t *blockchain_create(void);
 block_t *block_create(block_t const *prev, int8_t const *data, uint32_t data_len);
 void block_destroy(block_t *block);

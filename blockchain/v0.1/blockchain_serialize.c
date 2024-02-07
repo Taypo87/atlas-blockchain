@@ -34,7 +34,8 @@ int blockchain_serialize(blockchain_t const *blockchain, char const *path)
 	FILE *fp;
 	node_func_t action;
 	unsigned char num_blocks;
-	unsigned char magic_num[4] = {'H', 'B', 'L', 'K'}, hblk_ver[3] = {'0', '.', '1'}, endian;
+	unsigned char magic_num[4] = {'H', 'B', 'L', 'K'};
+	unsigned char hblk_ver[3] = {'0', '.', '1'}, endian;
 
 	endian = _get_endianness();
 	action = block_write;

@@ -33,7 +33,7 @@ blockchain_t *blockchain_deserialize(char const *path)
 {
     FILE *fp;
     blockchain_t *blockchain = calloc(1, sizeof(blockchain_t));
-    uint8_t *num_blocks;
+    uint8_t *num_blocks = 0;
     unsigned char four_[4];
 
     fp = fopen(path, "rb");

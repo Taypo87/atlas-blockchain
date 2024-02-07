@@ -1,11 +1,4 @@
 #include "blockchain.h"
-/**
- * block_hash - hashes a block using sha256
- * @block: the block to be hashed
- * @hash_buf; the buffer to store the hash
- * Return: pointer to the hash_buf
-*/
-#include "blockchain.h"
 
 /**
  * block_hash - Computes the hash of a block using SHA-256 algorithm

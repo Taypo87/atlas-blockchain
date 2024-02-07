@@ -49,7 +49,7 @@ blockchain_t *blockchain_deserialize(char const *path)
     if (_get_endianness() != four_[0])
         puts("endianness does not match\n");
     fread(num_blocks, 1, 4, fp);
-    printf("%d\n", num_blocks);
+    printf("%d\n", &num_blocks);
     return (blockchain);
 
     

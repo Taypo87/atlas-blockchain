@@ -32,14 +32,14 @@ static int check_version(unsigned char *version)
 blockchain_t *blockchain_deserialize(char const *path)
 {
     FILE *fp;
-    block_t **block;
+    block_t *block;
     block_info_t block_info;
     block_data_t block_data;
     blockchain_t *blockchain = calloc(1, sizeof(blockchain_t));
     uint8_t num_blocks = 0, i;
     unsigned char four_[4];
     
-    blockchain->chain = llist_create(MT_SUPPORT_TRUE);
+    blockchain->chain = llist_create(MT_SUPPORT_FALSE);
     fp = fopen(path, "rb");
     if (!fp)
         return (NULL);
@@ -53,20 +53,20 @@ blockchain_t *blockchain_deserialize(char const *path)
     if (_get_endianness() != four_[0])
         puts("endianness does not match\n");
     fread(&num_blocks, 1, 4, fp);
-    block = calloc(num_blocks, sizeof(block_t));
     for (i = 0; i < num_blocks; i++)
     {
+        block = calloc(1 , sizeof(block_t));
         fread(&block_info.index, 1, 4, fp);
         fread(&block_info.difficulty, 1, 4, fp);
         fread(&block_info.timestamp, 1, 8, fp);
         fread(&block_info.nonce, 1, 8, fp);
         fread(&block_info.prev_hash, 1 ,32, fp);
         fread(&block_data.len, 1, 4, fp);
-        fread(&block_data.buffer, 1, block_data.len, fp);
-        fread(block[i]->hash, 1, 32, fp);
-        block[i]->data = block_data;
-        block[i]->info = block_info;
-        llist_add_node(blockchain->chain, block[i], ADD_NODE_FRONT);
+        fread(block_data.buffer, 1, block_data.len, fp);
+        fread(block->hash, 1, 32, fp);
+        block->data = block_data;
+        block->info = block_info;
+        llist_add_node(blockchain->chain, block, ADD_NODE_REAR);
     }
 
     return (blockchain);

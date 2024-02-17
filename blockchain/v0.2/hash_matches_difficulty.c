@@ -20,11 +20,4 @@ int hash_matches_difficulty(uint8_t const hash[SHA256_DIGEST_LENGTH],
 	if (remains && (hash[i] & mask) != 0)
 		return (0);
 	return (1);
-
-
-
-
-
-	
-
 }

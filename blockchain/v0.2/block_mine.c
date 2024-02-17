@@ -9,7 +9,7 @@ void block_mine(block_t *block)
 
 	block_hash(block, &buff);
 
-	while (!hash_matches_difficulty(buff, block->info.difficulty))
+	while (!hash_matches_difficulty(&buff, block->info.difficulty))
 	{
 		block->info.nonce++;
 		block_hash(block, buff);

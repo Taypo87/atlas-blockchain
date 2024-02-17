@@ -9,9 +9,14 @@ void block_mine(block_t *block)
 
 	block_hash(block, buff);
 
-	while (!hash_matches_difficulty(buff, block->info.difficulty))
+	while (1)
 	{
 		block->info.nonce++;
 		block_hash(block, buff);
+		if (hash_matches_difficulty(buff, block->info.difficulty))
+		{
+			memcpy(block->hash, buff, SHA256_DIGEST_LENGTH);
+			break;
+		}
 	}
 }

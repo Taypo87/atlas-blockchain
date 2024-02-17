@@ -5,7 +5,8 @@
  * @difficulty: the difficulty the has needs to respect
  * Return: 1 if the difficulty is respected, else 0
 */
-int hash_matches_difficulty(uint8_t const hash[SHA256_DIGEST_LENGTH], uint32_t difficulty)
+int hash_matches_difficulty(uint8_t const hash[SHA256_DIGEST_LENGTH],
+													uint32_t difficulty)
 {
 	uint8_t mask;
 	uint8_t j = difficulty / 8, remains = difficulty % 8, i = 0;

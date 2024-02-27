@@ -13,7 +13,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include "llist.h"
-#include <signal.h>
 #include "../../crypto/hblk_crypto.h"
 
 # define COINBASE_AMOUNT    50

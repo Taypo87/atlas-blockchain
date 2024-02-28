@@ -30,7 +30,6 @@ typedef struct blockchain_s
 } blockchain_t;
 
 
-
 /**
  * struct block_info_s - Block info structure
  *
@@ -173,8 +172,9 @@ int hash_matches_difficulty(uint8_t const hash[SHA256_DIGEST_LENGTH], uint32_t d
 void block_mine(block_t *block);
 uint32_t blockchain_difficulty(blockchain_t const *blockchain);
 
+/*  transaction functions  */
 tx_out_t *tx_out_create(uint32_t amount, uint8_t const pub[EC_PUB_LEN]);
 unspent_tx_out_t *unspent_tx_out_create(uint8_t block_hash[SHA256_DIGEST_LENGTH],
                         uint8_t tx_id[SHA256_DIGEST_LENGTH], tx_out_t const *out);
-
+tx_in_t *tx_in_create(unspent_tx_out_t const *unspent);
 #endif

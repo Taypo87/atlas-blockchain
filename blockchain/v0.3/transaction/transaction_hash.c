@@ -32,6 +32,7 @@ uint8_t *transaction_hash(transaction_t const *transaction,
         append_buffer(masterbuff, &current, out_node->hash);
     }
     sha256((const int8_t *)masterbuff, (size_t)size_buff, hash_buf);
+    free(masterbuff);
     hash_buf_p = hash_buf;
     return(hash_buf_p);
 }

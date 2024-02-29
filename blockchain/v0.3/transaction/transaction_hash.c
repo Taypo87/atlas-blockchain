@@ -12,12 +12,13 @@ uint8_t *transaction_hash(transaction_t const *transaction,
     tx_in_t *in_node;
     tx_out_t *out_node;
     uint8_t *masterbuff, *hash_buf_p;
-    int input = 0, output = 0, i;
+    int input = 0, output = 0, i, size_buff;
     size_t current = 0;
 
     input = llist_size(transaction->inputs);
     output = llist_size(transaction->outputs);
-    masterbuff = malloc((32 * 3 * input) + (32 * output));
+    size_buff = (32 * 3 * input) + (32 * output);
+    masterbuff = malloc(size_buff);
     for (i = 0; i < input; i++)
     {
         in_node = llist_get_node_at(transaction->inputs, i);
@@ -30,7 +31,7 @@ uint8_t *transaction_hash(transaction_t const *transaction,
         out_node = llist_get_node_at(transaction->outputs, i);
         append_buffer(masterbuff, &current, out_node->hash);
     }
-    sha256((const int8_t *)hash_buf, SHA256_DIGEST_LENGTH, masterbuff);
+    sha256((const int8_t *)masterbuff, (size_t)size_buff, hash_buf);
     hash_buf_p = hash_buf;
     return(hash_buf_p);
 }

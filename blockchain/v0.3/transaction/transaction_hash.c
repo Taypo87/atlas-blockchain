@@ -3,8 +3,10 @@
  * append_buffer - appends a buffer at 32 byte increments
  * @masterbuffer: the buffer to write to
  * @current: the current location to write to in the buffer
+ * @hash: the content to be written
 */
-static void append_buffer(u_int8_t *masterbuffer, size_t *current, uint8_t *hash)
+static void append_buffer(u_int8_t *masterbuffer,
+					size_t *current, uint8_t *hash)
 {
 	memcpy(masterbuffer + *current, hash, 32);
 	*current += 32;
@@ -12,7 +14,7 @@ static void append_buffer(u_int8_t *masterbuffer, size_t *current, uint8_t *hash
 /**
  * transaction_hash -  computes the ID of a transaction
  * @transaction: struct containing lists of the in and out tx
- * @hash_buff: buffer to store the id
+ * @hash_buf: buffer to store the id
  * Return: pointer to hash_buf
 */
 uint8_t *transaction_hash(transaction_t const *transaction,
@@ -43,5 +45,5 @@ uint8_t *transaction_hash(transaction_t const *transaction,
 	sha256((const int8_t *)masterbuff, (size_t)size_buff, hash_buf);
 	free(masterbuff);
 	hash_buf_p = hash_buf;
-	return(hash_buf_p);
+	return (hash_buf_p);
 }

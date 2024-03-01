@@ -1,5 +1,6 @@
 #include "transaction.h"
 
+
 /**
  * tx_in_sign - signs a transaction input
  * @in: transaction input structure
@@ -15,12 +16,19 @@ sig_t *tx_in_sign(tx_in_t *in,
 	 uint8_t pub_buf[EC_PUB_LEN];
 	 tx_out_t *node;
 	 sig_t *sig;
+	 int i, list_size;
 
+	list_size = llist_size(all_unspent);
 	ec_to_pub(sender, pub_buf);
-	node = llist_get_head(all_unspent);
-	if (memcmp(node->pub, pub_buf, EC_PUB_LEN) != 0)
-		return (NULL);
-	ec_sign(sender, tx_id, SHA256_DIGEST_LENGTH, &in->sig);
-	sig = &in->sig;
-	return (sig);
+	for (i = 0; i < list_size; i++)
+	{
+		node = llist_get_node_at(all_unspent, i);
+		if (memcmp(node->pub, pub_buf, EC_PUB_LEN) == 0)
+			{
+				ec_sign(sender, tx_id, SHA256_DIGEST_LENGTH, &in->sig);
+				sig = &in->sig;
+				return (sig);
+			}
+	}
+	return (NULL);
 }

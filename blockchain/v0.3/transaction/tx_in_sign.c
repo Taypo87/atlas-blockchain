@@ -19,7 +19,6 @@ sig_t *tx_in_sign(tx_in_t *in,
 
 
 	list_size = llist_size(all_unspent);
-	printf("list size is: %d\n", list_size);
 	ec_to_pub(sender, pub_buf);
 	for (i = 0; i < list_size; i++)
 	{

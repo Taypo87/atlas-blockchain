@@ -24,11 +24,11 @@ sig_t *tx_in_sign(tx_in_t *in,
 	{
 		node = llist_get_node_at(all_unspent, i);
 		if (memcmp(node->out.pub, pub_buf, EC_PUB_LEN) == 0)
-			{
-				ec_sign(sender, tx_id, SHA256_DIGEST_LENGTH, &in->sig);
-				sig = &in->sig;
-				return (sig);
-			}
+		{
+			ec_sign(sender, tx_id, SHA256_DIGEST_LENGTH, &in->sig);
+			sig = &in->sig;
+			return (sig);
+		}
 	}
 	return (NULL);
 }

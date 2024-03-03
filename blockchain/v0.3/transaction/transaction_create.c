@@ -26,7 +26,6 @@ transaction_t *transaction_create(EC_KEY const *sender,
             total_amount += unspent_node->out.amount;
         }
     }
-    puts("step 1");
     if (total_amount < amount)
         return (NULL);
     unspent_out = llist_create(MT_SUPPORT_FALSE);
@@ -37,21 +36,16 @@ transaction_t *transaction_create(EC_KEY const *sender,
         transaction_return = tx_out_create(total_amount - amount, sender_pub_buffer);
         llist_add_node(unspent_out, transaction_return, ADD_NODE_REAR);
     }
-    puts("step 2");
     transaction->outputs = unspent_out;
     transaction->inputs = in;
     hash_buff_p = transaction_hash(transaction, hash_buff);
     memcpy(transaction->id, hash_buff_p, 32);
-    puts("step 2.5");
     for (i = 0; (int)i < llist_size(in); i++)
     {
-        puts("step 2.6");
         unspent_input = llist_get_node_at(in, i);
-        puts("step 2.7");
         tx_in_sign(unspent_input, hash_buff_p, sender, (llist_t *)in);
-        puts("step 2.8");
     }
-    puts("step 3");
+
     return (transaction);
     
 }

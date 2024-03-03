@@ -5,7 +5,7 @@
  * @sender: senders private key
  * @receiver: receivers public key
  * @amount: the amount to send
- * @all_unpsent: the list of unpent outputs to date
+ * @all_unspent: the list of unpent outputs to date
  * Return: a pointer to the transaction struct
 */
 transaction_t *transaction_create(EC_KEY const *sender,
@@ -15,7 +15,8 @@ transaction_t *transaction_create(EC_KEY const *sender,
 	unspent_tx_out_t *unspent_node;
 	uint32_t unspent_size = 0, i;
 	uint32_t total_amount = 0;
-	uint8_t sender_pub_buffer[65], reciever_pub_buffer[65], hash_buff[32], *hash_buff_p;
+	uint8_t sender_pub_buffer[65], reciever_pub_buffer[65];
+	uint8_t hash_buff[32], *hash_buff_p;
 	tx_out_t *transaction_out, *transaction_return;
 	tx_in_t *unspent_input;
 	llist_t *unspent_out, *in;
@@ -41,7 +42,8 @@ transaction_t *transaction_create(EC_KEY const *sender,
 	llist_add_node(unspent_out, transaction_out, ADD_NODE_REAR);
 	if (total_amount > amount)
 	{
-		transaction_return = tx_out_create(total_amount - amount, sender_pub_buffer);
+		transaction_return = tx_out_create(total_amount - amount,
+												sender_pub_buffer);
 		llist_add_node(unspent_out, transaction_return, ADD_NODE_REAR);
 	}
 	transaction->outputs = unspent_out;

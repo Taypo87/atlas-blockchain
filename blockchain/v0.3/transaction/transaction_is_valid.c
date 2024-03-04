@@ -38,8 +38,7 @@ int transaction_is_valid(transaction_t const *transaction,
 			}
 		}
 		pub_key = ec_from_pub(unspent_node->out.pub);
-		if (!ec_verify(pub_key, transaction->id,
-					SHA256_DIGEST_LENGTH, &in_node->sig))
+		if (!ec_verify(pub_key, transaction->id, SHA256_DIGEST_LENGTH, &in_node->sig))
 			return (0);
 		EC_KEY_free(pub_key);
 		
@@ -50,7 +49,7 @@ int transaction_is_valid(transaction_t const *transaction,
 		}
 	}
 	if (j == unspent_size)
-			return (0);
+		return (0);
 	free(flags);
 	return (1);
 }

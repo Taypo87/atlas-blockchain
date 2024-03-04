@@ -12,7 +12,8 @@ int transaction_is_valid(transaction_t const *transaction,
 	int i, input_size, j, unspent_size;
 	tx_in_t *in_node;
 	unspent_tx_out_t *unspent_node;
-	
+	EC_KEY *pub_key;
+
 	unspent_size = llist_size(all_unspent);
 	input_size = llist_size(transaction->inputs);
 	flags = calloc(input_size, sizeof(uint8_t));
@@ -27,24 +28,30 @@ int transaction_is_valid(transaction_t const *transaction,
 		for (j = 0; j < unspent_size; j++)
 		{
 			unspent_node = llist_get_node_at(all_unspent, j);
-			if (memcmp(unspent_node->out.hash, in_node->tx_out_hash, SHA256_DIGEST_LENGTH) == 0
-				&& memcmp(unspent_node->tx_id, in_node->tx_id, SHA256_DIGEST_LENGTH) == 0 &&
-				memcmp(unspent_node->block_hash, in_node->block_hash, SHA256_DIGEST_LENGTH)
-				== 0)
+			if (memcmp(unspent_node->out.hash, in_node->tx_out_hash,
+				 SHA256_DIGEST_LENGTH) == 0
+				&& memcmp(unspent_node->tx_id, in_node->tx_id,
+				 SHA256_DIGEST_LENGTH) == 0 &&
+				memcmp(unspent_node->block_hash,
+				 in_node->block_hash, SHA256_DIGEST_LENGTH) == 0)
 			{
 				flags[i] = 1;
 				break;
 			}
 		}
+		pub_key = ec_from_pub(unspent_node->out.pub);
+		if (!ec_verify(pub_key, transaction->id,
+					SHA256_DIGEST_LENGTH, &in_node->sig))
+			return (0);
+
 		if (j == unspent_size)
-			return 0;
-		
+			return (0);
+
 		if (!flags[i])
 		{
 			free(flags);
 			return (0);
 		}
-		
 	}
 	free(flags);
 	return (1);

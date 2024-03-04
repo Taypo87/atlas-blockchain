@@ -8,13 +8,14 @@
 int transaction_is_valid(transaction_t const *transaction,
 										llist_t *all_unspent)
 {
-	uint8_t buffer[SHA256_DIGEST_LENGTH];
+	uint8_t buffer[SHA256_DIGEST_LENGTH], *flags;
 	int i, input_size, j, unspent_size;
 	tx_in_t *in_node;
 	unspent_tx_out_t *unspent_node;
 	
 	unspent_size = llist_size(all_unspent);
 	input_size = llist_size(transaction->inputs);
+	flags = calloc(input_size, sizeof(uint8_t));
 	transaction_hash(transaction, buffer);
 	if (memcmp(&buffer, transaction->id, SHA256_DIGEST_LENGTH) != 0)
 	{
@@ -29,13 +30,16 @@ int transaction_is_valid(transaction_t const *transaction,
 			if (memcmp(in_node->tx_id, unspent_node->tx_id,
 									SHA256_DIGEST_LENGTH) == 0)
 			{
+				flags[i] = 1;
 				break;
 			}
 		}
-		if (j == unspent_size)
+		if (!flags[i])
 		{
+			free(flags);
 			return (0);
 		}        
 	}
+	free(flags);
 	return (1);
 }

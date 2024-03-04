@@ -39,9 +39,10 @@ int transaction_is_valid(transaction_t const *transaction,
 			free(flags);
 			return (0);
 		}
-		if (input_size != unspent_size)
-			return (0);
+		
 	}
+	if (input_size != llist_size(transaction->outputs))
+			return (0);
 	free(flags);
 	return (1);
 }

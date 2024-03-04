@@ -39,7 +39,7 @@ int transaction_is_valid(transaction_t const *transaction,
 					flags[i] = 1;
 			}
 		}
-		if (!flags[i] || input_size != output_size)
+		if (!flags[i])
 		{
 			free(flags);
 			return (0);

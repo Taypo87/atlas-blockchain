@@ -8,7 +8,7 @@
 int transaction_is_valid(transaction_t const *transaction,
 										llist_t *all_unspent)
 {
-	uint8_t buffer[SHA256_DIGEST_LENGTH], *flags;
+	uint8_t buffer[SHA256_DIGEST_LENGTH];
 	int i, input_size, j, unspent_size;
 	tx_in_t *in_node;
 	unspent_tx_out_t *unspent_node;
@@ -16,11 +16,9 @@ int transaction_is_valid(transaction_t const *transaction,
 	
 	unspent_size = llist_size(all_unspent);
 	input_size = llist_size(transaction->inputs);
-	flags = calloc(input_size, sizeof(uint8_t));
 	transaction_hash(transaction, buffer);
 	if (memcmp(&buffer, transaction->id, SHA256_DIGEST_LENGTH) != 0)
 	{
-		free(flags);
 		return (0);
 	}
 	for (i = 0; i < input_size; i++)
@@ -36,17 +34,14 @@ int transaction_is_valid(transaction_t const *transaction,
 				if (ec_verify(pub_key, buffer,
 							SHA256_DIGEST_LENGTH, &in_node->sig))
 							{
-								flags[i] = 1;
 								break;
 							}
 			}
 		}
-		if (!flags[i])
+		if (j == unspent_size)
 		{
-			free(flags);
 			return (0);
 		}        
 	}
-	free(flags);
 	return (1);
 }

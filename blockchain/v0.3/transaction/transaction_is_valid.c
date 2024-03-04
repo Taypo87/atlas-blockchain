@@ -19,9 +19,7 @@ int transaction_is_valid(transaction_t const *transaction,
 	flags = calloc(input_size, sizeof(uint8_t));
 	transaction_hash(transaction, buffer);
 	if (memcmp(&buffer, transaction->id, SHA256_DIGEST_LENGTH) != 0)
-	{
 		return (0);
-	}
 	for (i = 0; i < input_size; i++)
 	{
 		in_node = llist_get_node_at(transaction->inputs, i);
@@ -43,16 +41,16 @@ int transaction_is_valid(transaction_t const *transaction,
 		if (!ec_verify(pub_key, transaction->id,
 					SHA256_DIGEST_LENGTH, &in_node->sig))
 			return (0);
-
-		if (j == unspent_size)
-			return (0);
-
+		EC_KEY_free(pub_key);
+		
 		if (!flags[i])
 		{
 			free(flags);
 			return (0);
 		}
 	}
+	if (j == unspent_size)
+			return (0);
 	free(flags);
 	return (1);
 }

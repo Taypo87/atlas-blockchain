@@ -1,50 +1,69 @@
+#include <openssl/sha.h>
+#include <string.h>
 #include "transaction.h"
+
 /**
- * transaction_is_valid - checks whether a transacttion is valid
- * @transaction: pointer the the transaction to verify
- * @all_unspent: pointer to the list of transactions
- * Return: 1 if valid else 0
-*/
-int transaction_is_valid(transaction_t const *transaction,
-										llist_t *all_unspent)
+ * transaction_is_valid - checks whether a transaction is valid
+ * @transaction: pointer to the transaction to verify
+ * @all_unspent: list of all unspent transaction outputs to date
+ * Return: 1 if the transaction is valid, 0 otherwise
+ */
+int transaction_is_valid(transaction_t const *transaction, llist_t *all_unspent)
 {
-	uint8_t buffer[SHA256_DIGEST_LENGTH], *flags;
-	int i, input_size, j, unspent_size;
-	tx_in_t *in_node;
-	unspent_tx_out_t *unspent_node;
-	EC_KEY *pub_key;
-	
-	unspent_size = llist_size(all_unspent);
-	input_size = llist_size(transaction->inputs);
-	flags = calloc(input_size, sizeof(uint8_t));
-	transaction_hash(transaction, buffer);
-	if (memcmp(&buffer, transaction->id, SHA256_DIGEST_LENGTH) != 0)
-	{
-		free(flags);
-		return (0);
-	}
-	for (i = 0; i < input_size; i++)
-	{
-		in_node = llist_get_node_at(transaction->inputs, i);
-		for (j = 0; j < unspent_size; j++)
-		{
-			unspent_node = llist_get_node_at(all_unspent, j);
-			if (memcmp(in_node->tx_id, unspent_node->tx_id,
-									SHA256_DIGEST_LENGTH) == 0)
-			{
-				pub_key = ec_from_pub(unspent_node->out.pub);
-				if (ec_verify(pub_key, buffer,
-							SHA256_DIGEST_LENGTH, &in_node->sig))
-					flags[i] = 1;
-			}
-		}
-		if (!flags[i])
-		{
-			puts("return 1");
-			free(flags);
-			return (0);
-		}        
-	}
-	free(flags);
-	return (1);
+    uint8_t hash_buf[SHA256_DIGEST_LENGTH];
+    int input_total = 0, output_total = 0;
+    tx_in_t *input;
+    tx_out_t *output;
+    unspent_tx_out_t *unspent;
+    EC_KEY *pub_key;
+    int i, j, valid;
+
+    if (!transaction || !all_unspent)
+        return (0);
+
+    /* Check if the computed hash of the transaction matches the hash stored in it */
+    transaction_hash(transaction, hash_buf);
+    if (memcmp(hash_buf, transaction->id, SHA256_DIGEST_LENGTH) != 0)
+        return (0);
+
+    /* Check each input */
+    for (i = 0; i < llist_size(transaction->inputs); i++)
+    {
+        input = llist_get_node_at(transaction->inputs, i);
+        valid = 0;
+
+        for (j = 0; j < llist_size(all_unspent); j++)
+        {
+            unspent = llist_get_node_at(all_unspent, j);
+            if (memcmp(input->tx_id, unspent->out.hash, SHA256_DIGEST_LENGTH) == 0)
+            {
+                pub_key = ec_from_pub(unspent->out.pub);
+                if (!pub_key || !ec_verify(pub_key, transaction->id, SHA256_DIGEST_LENGTH, &input->sig))
+                {
+                    EC_KEY_free(pub_key);
+                    return (0);
+                }
+
+                EC_KEY_free(pub_key);
+                input_total += unspent->out.amount;
+                valid = 1;
+                break;
+            }
+        }
+
+        if (!valid)
+            return (0);
+    }
+
+    /* Check the total amount of inputs and outputs */
+    for (i = 0; i < llist_size(transaction->outputs); i++)
+    {
+        output = llist_get_node_at(transaction->outputs, i);
+        output_total += output->amount;
+    }
+
+    if (input_total != output_total)
+        return (0);
+
+    return (1);
 }

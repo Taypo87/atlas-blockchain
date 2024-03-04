@@ -26,10 +26,6 @@ int transaction_is_valid(transaction_t const *transaction,
 		for (j = 0; j < unspent_size; j++)
 		{
 			unspent_node = llist_get_node_at(all_unspent, j);
-			pub_key = ec_from_pub(unspent_node->out.pub);
-			if (ec_verify(pub_key, transaction->id, SHA256_DIGEST_LENGTH, &in_node->sig) == 0)
-				return (0);
-			EC_KEY_free(pub_key);
 			if (memcmp(unspent_node->out.hash, in_node->tx_out_hash,
 				 SHA256_DIGEST_LENGTH) == 0
 				&& memcmp(unspent_node->tx_id, in_node->tx_id,
@@ -41,6 +37,10 @@ int transaction_is_valid(transaction_t const *transaction,
 				break;
 			}
 		}
+		pub_key = ec_from_pub(unspent_node->out.pub);
+		if (ec_verify(pub_key, transaction->id, SHA256_DIGEST_LENGTH, &in_node->sig) == 0)
+			return (0);
+		EC_KEY_free(pub_key);
 		if (!flags[i])
 		{
 			free(flags);

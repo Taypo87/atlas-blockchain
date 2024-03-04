@@ -31,7 +31,7 @@ int transaction_is_valid(transaction_t const *transaction,
 				&& memcmp(unspent_node->tx_id, in_node->tx_id,
 				 SHA256_DIGEST_LENGTH) == 0 &&
 				memcmp(unspent_node->block_hash,
-				 in_node->block_hash, SHA256_DIGEST_LENGTH) == 0)
+				 in_node->block_hash, SHA256_DIGEST_LENGTH) == 0) 
 			{
 				flags[i] = 1;
 				break;

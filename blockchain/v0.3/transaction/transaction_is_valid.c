@@ -27,13 +27,18 @@ int transaction_is_valid(transaction_t const *transaction,
 		for (j = 0; j < unspent_size; j++)
 		{
 			unspent_node = llist_get_node_at(all_unspent, j);
-			if (memcmp(in_node->tx_id, unspent_node->tx_id,
-									SHA256_DIGEST_LENGTH) == 0)
+			if (memcmp(unspent_node->out.hash, in_node->tx_out_hash, SHA256_DIGEST_LENGTH) == 0
+				&& memcmp(unspent_node->tx_id, in_node->tx_id, SHA256_DIGEST_LENGTH) == 0 &&
+				memcmp(unspent_node->block_hash, in_node->block_hash, SHA256_DIGEST_LENGTH)
+				== 0)
 			{
 				flags[i] = 1;
 				break;
 			}
 		}
+		if (j == unspent_size)
+			return 0;
+		
 		if (!flags[i])
 		{
 			free(flags);
@@ -41,8 +46,6 @@ int transaction_is_valid(transaction_t const *transaction,
 		}
 		
 	}
-	if (input_size != llist_size(transaction->outputs))
-			return (0);
 	free(flags);
 	return (1);
 }

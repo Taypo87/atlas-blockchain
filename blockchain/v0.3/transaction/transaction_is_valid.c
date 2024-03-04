@@ -12,7 +12,6 @@ int transaction_is_valid(transaction_t const *transaction,
 	int i, input_size, j, unspent_size;
 	tx_in_t *in_node;
 	unspent_tx_out_t *unspent_node;
-	EC_KEY *pub_key;
 	
 	unspent_size = llist_size(all_unspent);
 	input_size = llist_size(transaction->inputs);
@@ -30,12 +29,7 @@ int transaction_is_valid(transaction_t const *transaction,
 			if (memcmp(in_node->tx_id, unspent_node->tx_id,
 									SHA256_DIGEST_LENGTH) == 0)
 			{
-				pub_key = ec_from_pub(unspent_node->out.pub);
-				if (ec_verify(pub_key, buffer,
-							SHA256_DIGEST_LENGTH, &in_node->sig))
-							{
-								break;
-							}
+				break;
 			}
 		}
 		if (j == unspent_size)

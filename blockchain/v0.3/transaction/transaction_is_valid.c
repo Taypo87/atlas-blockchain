@@ -20,6 +20,7 @@ int transaction_is_valid(transaction_t const *transaction,
 	transaction_hash(transaction, buffer);
 	if (memcmp(&buffer, transaction->id, SHA256_DIGEST_LENGTH) != 0)
 	{
+		puts("return 1");
 		free(flags);
 		return (0);
 	}

@@ -10,7 +10,7 @@ void transaction_destroy(transaction_t *transaction)
 
 	in_size = llist_size(transaction->inputs);
 	out_size = llist_size(transaction->outputs);
-	
+
 	llist_destroy(transaction->inputs, in_size, free);
 	llist_destroy(transaction->outputs, out_size, free);
 	free(transaction);

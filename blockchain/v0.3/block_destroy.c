@@ -5,10 +5,7 @@
 */
 void block_destroy(block_t *block)
 {
-	int list_size;
-
-	list_size = llist_size(block->transactions);
-	llist_destroy(block->transactions, list_size,
+	llist_destroy(block->transactions, 1,
 	 (node_dtor_t)transaction_destroy);
 	free(block->hash);
 	free(block->transactions);

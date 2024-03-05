@@ -9,6 +9,5 @@ void block_destroy(block_t *block)
 
 	list_size = llist_size(block->transactions);
 	llist_destroy(block->transactions, list_size, transaction_destroy);
-	transaction_destroy(block->transactions);
 	free(block);
 }

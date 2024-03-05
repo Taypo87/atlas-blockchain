@@ -7,7 +7,5 @@ void block_destroy(block_t *block)
 {
 	llist_destroy(block->transactions, 1,
 	 free);
-	free(block->hash);
-	free(block->transactions);
 	free(block);
 }

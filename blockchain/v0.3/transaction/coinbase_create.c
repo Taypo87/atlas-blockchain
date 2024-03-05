@@ -1,5 +1,7 @@
 #include "transaction.h"
-
+/**
+ * coinbase_create - 
+*/
 transaction_t *coinbase_create(EC_KEY const *receiver, uint32_t block_index)
 {
     transaction_t *transaction = calloc(1, sizeof(transaction_t));
@@ -13,7 +15,7 @@ transaction_t *coinbase_create(EC_KEY const *receiver, uint32_t block_index)
     memcpy(in_p->tx_out_hash, &block_index, 4);
     out_P->amount = COINBASE_AMOUNT;
     ec_to_pub(receiver, pub_buf);
-    memcpy(out_P->pub, pub_buf, 32);
+    memcpy(out_P->pub, pub_buf, 65);
     sha256((int8_t *)out_P, sizeof(out_P->amount) + sizeof(out_P->pub), out_P->hash);
     transaction->inputs = llist_create(MT_SUPPORT_FALSE);
     transaction->outputs = llist_create(MT_SUPPORT_FALSE);

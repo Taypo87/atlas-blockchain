@@ -10,6 +10,7 @@ transaction_t *coinbase_create(EC_KEY const *receiver, uint32_t block_index)
 
     if(!receiver)
         return (NULL);
+    memcpy(in_p->tx_out_hash, &block_index, 4);
     out_P->amount = COINBASE_AMOUNT;
     ec_to_pub(receiver, pub_buf);
     memcpy(out_P->pub, pub_buf, 32);

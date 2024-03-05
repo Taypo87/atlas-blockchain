@@ -8,6 +8,6 @@ void block_destroy(block_t *block)
 	int list_size;
 
 	list_size = llist_size(block->transactions);
-	llist_destroy(block->transactions, list_size, &transaction_destroy);
+	llist_destroy(block->transactions, list_size, transaction_destroy);
 	free(block);
 }
